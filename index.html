@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        .login-container { width: 300px; margin: 100px auto; padding: 20px; background: white; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input { width: 90%; padding: 10px; margin: 10px 0; }
+        button { width: 100%; padding: 10px; background: #333; color: white; border: none; cursor: pointer; }
+        .dashboard { display: none; }
+        .sidebar { width: 200px; height: 100vh; background: #333; color: white; position: fixed; left: 0; top: 0; padding-top: 20px; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar ul li { padding: 15px; text-align: center; cursor: pointer; border-bottom: 1px solid #555; }
+        .sidebar ul li a { color: white; text-decoration: none; display: block; }
+        .content { margin-left: 220px; padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- Tela de Login -->
+    <div class="login-container" id="login">
+        <h2>Login do Administrador</h2>
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="senha" placeholder="Senha">
+        <button onclick="login()">Entrar</button>
+    </div>
+
+    <!-- Dashboard do Admin -->
+    <div class="dashboard" id="dashboard">
+        <div class="sidebar">
+            <ul>
+                <li><a href="vestibularinicio.html">Vestibular</a></li>
+                <li>Processos Seletivos</li>
+                <li>Concursos</li>
+                <li>Usuários</li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Bem-vindo ao Painel do Administrador</h2>
+            <p>Selecione uma opção no menu.</p>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            var email = document.getElementById("email").value;
+            var senha = document.getElementById("senha").value;
+
+            if (email === "comvest@comvest.iscm.br" && senha === "comvest") {
+                document.getElementById("login").style.display = "none";
+                document.getElementById("dashboard").style.display = "block";
+            } else {
+                alert("Usuário ou senha incorretos!");
+            }
+        }
+    </script>
+
+</body>
+      </html>
