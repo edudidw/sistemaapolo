@@ -125,8 +125,8 @@
 
     <script>
         // Configuração do RestDB.io
-        const databaseUrl = "https://YOUR_RESTDB_URL/rest/seletivos";
-        const apiKey = "YOUR_API_KEY";
+        const databaseUrl = "https://apolo-0ff2.restdb.io/rest/temaapolp?max=2";
+        const apiKey = "67b4acd421b27dda10993ba8";
 
         // Simulação de Login
         const loginForm = document.getElementById("admin-login");
@@ -196,11 +196,11 @@
                 endereco: locationAddress
             };
 
-            fetch("https://YOUR_RESTDB_URL/rest/locais", {
+            fetch("https://apolo-0ff2.restdb.io/rest/temaapolp?max=2", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "x-apikey": apiKey
+                    "x-apikey": 67b4acd421b27dda10993ba8
                 },
                 body: JSON.stringify(locationData)
             })
