@@ -2,39 +2,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login e Dashboard do Candidato</title>
+    <title>Portal do Candidato</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Função para validar o login
-        function login() {
-            // Capturando os valores dos campos
-            const cpf = document.getElementById('cpf').value;
-            const nascimento = document.getElementById('nascimento').value;
-            
-            // Simulação de validação de login (apenas para fins de exemplo)
-            if (cpf === '12345678901' && nascimento === '2000-01-01') {
-                // Redireciona para o dashboard
-                window.location.href = 'dashboard.html'; // Substitua pelo caminho correto
-            } else {
-                alert('CPF ou Data de Nascimento incorretos!');
-            }
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Formulário de Login -->
-    <div class="max-w-md mx-auto mt-10 p-6 bg-white border border-gray-300 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold text-center text-blue-600 mb-4">Login do Candidato</h2>
-        <div class="mb-4">
-            <label for="cpf" class="block font-bold mb-2">CPF</label>
-            <input type="text" id="cpf" class="w-full border border-gray-300 p-2 rounded-md" placeholder="Digite seu CPF" required>
-        </div>
-        <div class="mb-4">
-            <label for="nascimento" class="block font-bold mb-2">Data de Nascimento</label>
-            <input type="date" id="nascimento" class="w-full border border-gray-300 p-2 rounded-md" required>
-        </div>
-        <button onclick="login()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Entrar</button>
+    <!-- Login Form -->
+    <div id="login-form" class="max-w-md mx-auto mt-10 p-6 bg-white border border-gray-300 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Login do Candidato</h2>
+        
+        <form id="login" class="space-y-4">
+            <div>
+                <label for="cpf" class="block font-bold">CPF</label>
+                <input type="text" id="cpf" class="w-full border border-gray-300 p-2 rounded-md" placeholder="Digite seu CPF">
+            </div>
+            <div>
+                <label for="data_nascimento" class="block font-bold">Data de Nascimento</label>
+                <input type="date" id="data_nascimento" class="w-full border border-gray-300 p-2 rounded-md">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Entrar</button>
+        </form>
+        
+        <p class="mt-4 text-center text-red-600" id="error-message"></p>
     </div>
 
     <!-- Dashboard do Candidato -->
@@ -48,7 +38,7 @@
                     <li><a href="#" class="block p-2 text-blue-600 hover:text-blue-800">Minhas Inscrições</a></li>
                     <li><a href="#" class="block p-2 text-blue-600 hover:text-blue-800">Consultar Resultados</a></li>
                     <li><a href="#" class="block p-2 text-blue-600 hover:text-blue-800">Alterar Senha</a></li>
-                    <li><a href="#" class="block p-2 text-blue-600 hover:text-blue-800">Sair</a></li>
+                    <li><a href="#" class="block p-2 text-blue-600 hover:text-blue-800" onclick="logout()">Sair</a></li>
                 </ul>
             </div>
 
@@ -56,35 +46,28 @@
             <div class="w-3/4 pl-8">
                 <h1 class="text-2xl font-bold text-blue-600 mb-6">Bem-vindo ao Portal do Candidato</h1>
 
-                <!-- Informações gerais -->
                 <div class="bg-blue-100 border border-blue-300 p-4 mb-6 rounded-lg">
                     <p>Selecione abaixo o processo seletivo e a inscrição que você deseja acessar. Cada tipo de inscrição (Vestibular, Sisu, etc) terá uma lista de serviços e informações específicas.</p>
                 </div>
 
-                <!-- Notificação sobre inscrições -->
                 <div class="bg-yellow-100 border border-yellow-300 p-4 mb-6 rounded-lg">
                     <p><span class="font-semibold">Atenção:</span> A partir de 2016, todas as novas inscrições para Vestibular e SISU estão disponíveis neste portal.</p>
                 </div>
 
-                <!-- Processos seletivos -->
                 <div class="mb-6">
                     <label for="processos" class="block font-bold mb-2">Processos Seletivos</label>
                     <select id="processos" class="w-full border border-gray-300 p-2 rounded-md">
                         <option>-- Selecione --</option>
-                        <!-- As opções de processos seletivos serão carregadas dinamicamente -->
                     </select>
                 </div>
 
-                <!-- Benefícios -->
                 <div class="mb-6">
                     <label for="beneficios" class="block font-bold mb-2 text-red-600">Programa de Concessão de Benefícios</label>
                     <select id="beneficios" class="w-full border border-gray-300 p-2 rounded-md">
                         <option>-- Selecione --</option>
-                        <!-- As opções de benefícios serão carregadas dinamicamente -->
                     </select>
                 </div>
 
-                <!-- Botões de ação -->
                 <div class="flex space-x-4">
                     <button class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Consultar Inscrição</button>
                     <button class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-200">Enviar Documentos</button>
@@ -94,19 +77,39 @@
     </div>
 
     <script>
-        // Função para mostrar o dashboard após login bem-sucedido
-        function login() {
+        // Função para login no sistema
+        document.getElementById('login').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
             const cpf = document.getElementById('cpf').value;
-            const nascimento = document.getElementById('nascimento').value;
+            const data_nascimento = document.getElementById('data_nascimento').value;
+            const errorMessage = document.getElementById('error-message');
+            
+            try {
+                const response = await axios.get(`https://apolo-0ff2.restdb.io/rest/apologithub?max=2?q={"cpf":"${cpf}", "data_nascimento":"${data_nascimento}"}`, {
+                    headers: { "x-apikey": "67b4acd421b27dda10993ba8" }
+                });
 
-            // Validação simples (substitua com a lógica real do banco de dados)
-            if (cpf === '12345678901' && nascimento === '2000-01-01') {
-                document.querySelector('div.max-w-md').style.display = 'none'; // Esconde o formulário de login
-                document.getElementById('dashboard').style.display = 'block'; // Exibe o dashboard
-            } else {
-                alert('CPF ou Data de Nascimento incorretos!');
+                if (response.data.length === 0) {
+                    errorMessage.textContent = 'CPF ou Data de Nascimento incorretos.';
+                    return;
+                }
+
+                // Se o candidato foi encontrado, redireciona para o dashboard
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+            } catch (error) {
+                console.error(error);
+                errorMessage.textContent = 'Erro ao autenticar. Tente novamente.';
             }
+        });
+
+        // Função de logout
+        function logout() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
         }
     </script>
+
 </body>
-              </html>
+                    </html>
